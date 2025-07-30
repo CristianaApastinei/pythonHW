@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Math Operations</title>
+</head>
+<body>
+  <h2>Compute Operation</h2>
+  <form id="mathForm">
+    <label>Type:</label>
+    <select name="type">
+      <option value="pow">Power</option>
+      <option value="fact">Factorial</option>
+      <option value="fib">Fibonacci</option>
+    </select><br><br>
+
+    <label>X:</label>
+    <input type="number" name="x" required><br><br>
+
+    <label>Y (optional):</label>
+    <input type="number" name="y"><br><br>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <h3 id="result"></h3>
+
+  <script>
+    document.getElementById('mathForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const payload = {
+        type: formData.get('type'),
+        x: parseInt(formData.get('x')),
+        y: formData.get('y') ? parseInt(formData.get('y')) : 0
+      };
+
+      const res = await fetch('http://127.0.0.1:8000/compute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      document.getElementById('result').textContent = 'Result: ' + data.result;
+    });
+  </script>
+</body>
+</html>
